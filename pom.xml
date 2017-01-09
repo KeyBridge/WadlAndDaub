@@ -3,11 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>keybridge.application</groupId>
-  <artifactId>TestWadlAndDaub</artifactId>
+  <artifactId>WadlAndDaub</artifactId>
   <version>0.0.1</version>
   <packaging>war</packaging>
 
-  <name>TestWadlAndDaub</name>
+  <name>WadlAndDaub</name>
 
   <properties>
     <endorsed.dir>${project.build.directory}/endorsed</endorsed.dir>
@@ -83,5 +83,11 @@
       </plugin>
     </plugins>
   </build>
+  <description>Wadl and Daub
 
+    A WADL-based REST API documentation generator.
+
+    This is a demonstration utility to develop an automatic API documentation generator in
+    Java Server Faces (JSF) by parsing and enriching the default Jersey-provided WADL file.
+  </description>
 </project>
