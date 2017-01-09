@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<application xmlns="http://wadl.dev.java.net/2009/02">
+    <doc xmlns:jersey="http://jersey.java.net/" jersey:generatedBy="Jersey: 2.22.1 2015-10-07 10:54:41"/>
+    <doc xmlns:jersey="http://jersey.java.net/" jersey:hint="This is simplified WADL with user and core resources only. To get full WADL with extended resources use the query parameter detail. Link: http://localhost:8080/TestWadlAndDaub/rest/application.wadl?detail=true"/>
+    <grammars/>
+    <resources base="http://localhost:8080/TestWadlAndDaub/rest/">
+        <resource path="/Items">
+            <method id="postXml" name="POST">
+                <request>
+                    <representation mediaType="application/xml"/>
+                </request>
+                <response>
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <method id="getXml" name="GET">
+                <response>
+                    <representation mediaType="application/xml"/>
+                </response>
+            </method>
+            <resource path="{id}">
+                <param xmlns:xs="http://www.w3.org/2001/XMLSchema" name="id" style="template" type="xs:string"/>
+                <method id="getXml" name="GET">
+                    <response>
+                        <representation mediaType="application/xml"/>
+                    </response>
+                </method>
+                <method id="putXml" name="PUT">
+                    <request>
+                        <representation mediaType="application/xml"/>
+                    </request>
+                </method>
+                <method id="delete" name="DELETE"/>
+            </resource>
+        </resource>
+    </resources>
+</application>

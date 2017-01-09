@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:wadl="http://xmlns.jcp.org/jsf/composite/wadl"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <ui:composition template="/template.xhtml">
+    <ui:define name="top">
+      <h1>Top content</h1>
+    </ui:define>
+
+    <ui:define name="content">
+      <p>
+        this is the content section
+      </p>
+
+      <p>
+        <h:form id="formWadlLoader">
+          <h:commandLink   styleClass="btn btn-default">
+            Load WADL
+            <f:ajax render="wadlResource" listener="#{wadlBean.onLoad()}"/>
+          </h:commandLink>
+        </h:form>
+      </p>
+
+      <wadl:resource id="wadlResource"
+                     path="boundary"
+                     label="Hello World API" />
+
+
+      <style type="text/css">
+        .method-name {
+          display: inline-block;
+          min-width: 50px;
+          border-right: 1px solid rgba(0,0,0,0.2);
+        }
+
+        .method-id {
+          margin-left: 1em;
+        }
+
+        .uri-parameter {
+          color:#036fab;
+        }
+      </style>
+
+    </ui:define>
+
+
+
+
+  </ui:composition>
+</html>
+
