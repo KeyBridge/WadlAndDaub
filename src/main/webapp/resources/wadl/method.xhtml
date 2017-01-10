@@ -1,0 +1,134 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:cc="http://xmlns.jcp.org/jsf/composite"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:wadl="http://xmlns.jcp.org/jsf/composite/wadl">
+
+  <!-- INTERFACE -->
+  <cc:interface>
+    <cc:attribute name="method" required="true" type="net.java.dev.wadl.Method" displayName="The method ID"/>
+
+    <cc:attribute name="title" required="true" default="Rest Resource" type="java.lang.String" displayName="The resource label"/>
+    <cc:attribute name="description" required="false" type="java.lang.String" displayName="The resource description. If present this is displayed below the label."/>
+    <cc:attribute name="icon" required="false" default="glyphicon glyphicon-cloud" type="java.lang.String" displayName="A FA icon to display in the header."/>
+    <cc:attribute name="collapsible" required="false" default="false" type="java.lang.Boolean" displayName="Whether the panel body is collapsible."/>
+  </cc:interface>
+
+  <!-- IMPLEMENTATION -->
+  <cc:implementation>
+    <div id="#{cc.clientId}">
+
+      <h:panelGroup rendered="#{cc.attrs.method !=null}">
+
+        <div class="panel panel-#{wadlBean.buildCSSType(cc.attrs.method.name)}">
+          <div class="panel-heading" style="position: relative;">
+            <div class="pull-left">
+              <h:panelGroup rendered="#{!cc.attrs.collapsible}">
+                <span class="rest-button label label-#{wadlBean.buildCSSType(cc.attrs.method.name)}">#{cc.attrs.method.name}</span>
+                <div class="rest-label">
+                  <h:outputText value="#{cc.attrs.method.id}" styleClass="text-#{wadlBean.buildCSSType(cc.attrs.method.name)}" style="margin-left: 1em;"/>
+                </div>
+              </h:panelGroup>
+              <h:panelGroup rendered="#{cc.attrs.collapsible}">
+                <a class="collapsed" role="button" data-toggle="collapse" href="##{cc.attrs.method.id}">
+                  <span class="rest-button label label-#{wadlBean.buildCSSType(cc.attrs.method.name)}">#{cc.attrs.method.name}</span>
+                  <div class="rest-label">
+                    <h:outputText value="#{cc.attrs.method.id}" styleClass="text-#{wadlBean.buildCSSType(cc.attrs.method.name)}" style="margin-left: 1em;"/>
+                  </div>
+                </a>
+              </h:panelGroup>
+            </div>
+            <h3 class="panel-title text-right"> #{cc.attrs.title} <span class="#{cc.attrs.icon}" style="margin-left: 1em;"/>  </h3>
+          </div>
+          <div id="#{cc.attrs.method.id}" class="#{cc.attrs.collapsible ? 'collapse' : 'collapse.in'}">
+            <div class="panel-body">
+              <h4>Description</h4>
+              <p> <h:outputText value="#{wadlBean.formatDescription(cc.attrs.description)}" escape="false"/> </p>
+
+              <h4> URI Pattern  </h4>
+              <p>
+                <span class="label label-#{wadlBean.buildCSSType(cc.attrs.method.name)}">#{cc.attrs.method.name}</span>
+                <code><h:outputText value="#{wadlBean.buildFormattedURI(cc.attrs.method.path)}" escape="false"/></code>
+              </p>
+
+              <h:panelGroup rendered="#{wadlBean.findMethodParameters(cc.attrs.method).size() > 0}">
+                <div class="table-responsive">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th width="20%">Parameter</th>
+                      <th width="50%">Description</th>
+                      <th>Data Type</th>
+                      <th>Type</th>
+                    </tr>
+                    <ui:repeat value="#{wadlBean.findMethodParameters(cc.attrs.method)}" var="p">
+                      <tr>
+                        <th> <h:outputText value="#{p.name}" styleClass="text-primary"/>  </th>
+                        <td> #{labelsBean.getLabelValue(p.name)}  </td>
+                        <td>#{p.type.localPart}</td>
+                        <td>#{p.style}</td>
+                      </tr>
+                    </ui:repeat>
+                  </table>
+                </div>
+              </h:panelGroup>
+
+              <h:panelGroup rendered="#{wadlBean.isPutOrPost(cc.attrs.method)}">
+                <!--Request objects are only valid for PUT or POST operations-->
+                <h4>Request</h4>
+                <div class="table-responsive">
+                  <table class="table table-condensed">
+                    <tr>
+                      <th width="20%">Element</th>
+                      <th width="50%">Description</th>
+                      <th>Encoding</th>
+                    </tr>
+                    <ui:repeat value="#{wadlBean.findMethodRequestElements(cc.attrs.method).entrySet().toArray()}" var="mvmap">
+                      <tr>
+                        <td> <code> #{mvmap.key} </code> </td>
+                        <td> #{labelsBean.getLabelValue(mvmap.key)} </td>
+                        <td>
+                          <ui:repeat value="#{mvmap.value}" var="rep">
+                            <span class="label label-#{wadlBean.buildCSSType(rep.mediaType)}">#{rep.mediaType}</span>
+                          </ui:repeat>
+                        </td>
+                      </tr>
+                    </ui:repeat>
+
+                  </table>
+                </div>
+
+              </h:panelGroup>
+
+              <h4>Response</h4>
+              <div class="table-responsive">
+                <table class="table table-condensed">
+                  <tr>
+                    <th width="20%">HTTP</th>
+                    <th width="50%">Element</th>
+                    <th>Encoding</th>
+                  </tr>
+                  <ui:repeat value="#{cc.attrs.method.response}" var="r">
+                    <ui:repeat value="#{wadlBean.findMethodResponseElements(r).entrySet().toArray()}" var="mvmap">
+                      <tr>
+                        <td> #{r.status.size() == 0? '200' : r.status} </td>
+                        <td> <code>#{mvmap.key}</code>  #{labelsBean.getLabelValue(mvmap.key)}  </td>
+                        <td>
+                          <ui:repeat value="#{mvmap.value}" var="rep">
+                            <span class="label label-#{wadlBean.buildCSSType(rep.mediaType)}">#{rep.mediaType}</span>
+                          </ui:repeat>
+                        </td>
+                      </tr>
+                    </ui:repeat>
+                  </ui:repeat>
+                </table>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </h:panelGroup>
+    </div>
+  </cc:implementation>
+</html>

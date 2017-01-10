@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:wadl="http://xmlns.jcp.org/jsf/composite/wadl"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+  <ui:composition template="/template.xhtml">
+    <ui:define name="top">
+      <h1>Top content</h1>
+    </ui:define>
+
+    <ui:define name="content">
+      <p>
+        this is the content section
+      </p>
+
+      <style type="text/css">
+
+        .rest-button{
+          position: absolute;
+          top: 0;
+          left: 0;
+          height: 100%;
+          padding: 1.3em;
+          width: 6em;
+        }
+        .rest-label{
+          margin-left: 4em;
+        }
+      </style>
+
+
+
+
+
+
+      <wadl:method id="wadlResource"
+                   collapsible="true"
+                   method="#{wadlBean.findMethod('borderIntersection')}"
+                   title=" Find a National Sovereign Border "
+                   description=" Find the Sovereign Border record belonging to the indicated country.
+
+                   Borders are geographic boundaries of political entities or legal jurisdictions, such as governments, sovereign states, federated states, and other subnational entities. For nations bordering an ocean the sovereign territory includes the maritime border, a division enclosing an area in the ocean where a nation has exclusive rights over maritime features, limits and zones. Maritime borders represent the jurisdictional borders of a maritime nation.
+
+                   For example: The United States maritime boundary is measured from the official US baseline, recognized as the low-water line along the coast as marked on the NOAA nautical charts in accordance with the articles of the Law of the Sea.
+
+                   The Territorial Sea is a maritime zone over which the United States exercises sovereignty. Sovereignty extends to the airspace above and to the seabed below the territorial sea. The US territorial sea extends 12 nautical miles from the baseline.
+
+                   This method provides the discrete segments (POLYGONS) describing the Territorial Sea Maritime limits and boundaries. "
+                   />
+
+
+
+
+    </ui:define>
+
+
+
+
+  </ui:composition>
+</html>
+

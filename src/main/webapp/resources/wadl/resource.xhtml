@@ -33,15 +33,16 @@
 
         <h2>Resources</h2>
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-          <ui:repeat value="#{wadlBean.getMethods(cc.attrs.path)}" var="m">
+          <ui:repeat value="#{wadlBean.findMethods(cc.attrs.path)}" var="m">
 
-            <div class="panel #{wadlBean.buildPanelClass(m.name)}">
+            <div class="panel panel-#{wadlBean.buildCSSType(m.name)}">
               <div class="panel-heading" role="tab">
                 <h3 class="panel-title" style="position:relative;">
                   <span class="pull-left method-name">#{m.name}</span>
                   <a class="collapsed method-id" role="button" data-toggle="collapse" data-parent="#accordion"
                      href="##{m.id}" aria-expanded="false" aria-controls="collapseTwo">
                     #{m.id}
+                    <span class="pull-right clickable"><i class="glyphicon glyphicon-chevron-up"></i></span>
                   </a>
                   <span class="pull-right">
                     [short description]
@@ -57,55 +58,82 @@
 
                   <h4> URI Pattern</h4>
                   <p>
-                    <h:outputText value="#{wadlBean.buildFormattedURI(m.path)}" escape="false"/>
+                    <code>
+                      <h:outputText value="#{wadlBean.buildFormattedURI(m.path)}" escape="false"/>
+                    </code>
                   </p>
 
-                  <h4> Parameters </h4>
+                  <h:panelGroup rendered="#{wadlBean.findMethodParameters(m).size() > 0}">
+                    <div class="table-responsive">
+                      <table class="table table-condensed">
+                        <tr>
+                          <th width="20%">Parameter</th>
+                          <th width="50%">Description</th>
+                          <th>Data Type</th>
+                          <th>Type</th>
+                        </tr>
+                        <ui:repeat value="#{wadlBean.findMethodParameters(m)}" var="p">
+                          <tr>
+                            <th>#{p.name}</th>
+                            <td> [parameter description] </td>
+                            <td>#{p.type.localPart}</td>
+                            <td>#{p.style}</td>
+                          </tr>
+                        </ui:repeat>
+                      </table>
+                    </div>
+                  </h:panelGroup>
+
+                  <h:panelGroup rendered="#{wadlBean.isPutOrPost(m)}">
+                    <!--Request objects are only valid for PUT or POST operations-->
+                    <h4>Request</h4>
+                    <div class="table-responsive">
+                      <table class="table table-condensed">
+                        <tr>
+                          <th width="20%">Element</th>
+                          <th width="50%">Description</th>
+                          <th>Encoding</th>
+                        </tr>
+                        <ui:repeat value="#{wadlBean.findMethodRequestElements(m).entrySet().toArray()}" var="mvmap">
+                          <td> <code> #{mvmap.key} </code> </td>
+                          <td> <!--the element documentation  mvmap.value.doc --> [ element description ] </td>
+                          <td>
+                            <ui:repeat value="#{mvmap.value}" var="rep">
+                              <span class="label label-#{wadlBean.buildCSSType(rep.mediaType)}">#{rep.mediaType}</span>
+                            </ui:repeat>
+                          </td>
+                        </ui:repeat>
+
+                      </table>
+                    </div>
+
+                  </h:panelGroup>
+
+
+                  <h4>Response</h4>
                   <div class="table-responsive">
                     <table class="table table-condensed">
                       <tr>
-                        <th>Parameter</th>
-                        <th>Description</th>
-                        <th>Data Type</th>
-                        <th width="150">Type</th>
+                        <th width="20%">HTTP</th>
+                        <th width="50%">Element</th>
+                        <th>Encoding</th>
                       </tr>
-                      <ui:repeat value="#{m.parent.param}" var="p">
-                        <tr>
-                          <th>#{p.name}</th>
-                          <td> [parameter description] </td>
-                          <td>#{p.type.localPart}</td>
-                          <td>#{p.style}</td>
-                        </tr>
+                      <ui:repeat value="#{m.response}" var="r">
+                        <ui:repeat value="#{wadlBean.findMethodResponseElements(r).entrySet().toArray()}" var="mvmap">
+                          <td> #{r.status.size() == 0? '200' : r.status} </td>
+                          <td> <code>#{mvmap.key}</code> </td>
+                          <td>
+                            <ui:repeat value="#{mvmap.value}" var="rep">
+                              <span class="label label-#{wadlBean.buildCSSType(rep.mediaType)}">#{rep.mediaType}</span>
+                            </ui:repeat>
+                          </td>
+                        </ui:repeat>
                       </ui:repeat>
-                      <ui:repeat value="#{m.request.param}" var="p">
-                        <tr>
-                          <th>#{p.name}</th>
-                          <td> [parameter description] </td>
-                          <td>#{p.type.localPart}</td>
-                          <td>#{p.style}</td>
-                        </tr>
-                      </ui:repeat>
+
+
+
                     </table>
                   </div>
-
-                  <h4>Request</h4>
-                  <p>
-                    <ui:repeat value="#{m.request}" var="r">
-                      <ui:repeat value="#{r.representation}" var="rep">
-                        #{rep.element}
-                        <span class="label #{wadlBean.buildMediaTypeClass(rep.mediaType)}">#{rep.mediaType}</span>
-                      </ui:repeat>
-                    </ui:repeat>
-                  </p>
-
-                  <h4>Response</h4>
-                  <p>
-                    <ui:repeat value="#{m.response}" var="r">
-                      <ui:repeat value="#{r.representation}" var="rep">
-                        <span class="label #{wadlBean.buildMediaTypeClass(rep.mediaType)}">#{rep.mediaType}</span>
-                      </ui:repeat>
-                    </ui:repeat>
-                  </p>
                 </div>
               </div>
             </div>

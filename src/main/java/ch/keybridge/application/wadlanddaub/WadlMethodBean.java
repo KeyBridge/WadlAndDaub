@@ -20,10 +20,12 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
@@ -35,9 +37,9 @@ import net.java.dev.wadl.*;
  *
  * @author Key Bridge LLC
  */
-@Named(value = "wadlBean")
-@RequestScoped
-public class WadlBean implements Serializable {
+@Named(value = "wadlMethodBean")
+@ViewScoped
+public class WadlMethodBean implements Serializable {
 
   private String uri = "http://keybridgewireless.com/gis/rest/application.wadl";
 
@@ -53,8 +55,7 @@ public class WadlBean implements Serializable {
   /**
    * Creates a new instance of WadlBean
    */
-  public WadlBean() {
-    onLoad();
+  public WadlMethodBean() {
   }
 
   public Application getApplication() {
@@ -94,7 +95,7 @@ public class WadlBean implements Serializable {
     return method;
   }
 
-  public Method findMethod(String id) {
+  public Method getMethod(String id) {
     if (method == null || !method.getId().equals(id)) {
       for (Method findallMethod : findallMethods()) {
         if (findallMethod.getId().equals(id)) {
@@ -107,10 +108,6 @@ public class WadlBean implements Serializable {
 
   public void setMethod(Method method) {
     this.method = method;
-  }
-
-  public boolean isSetMethod() {
-    return this.method != null;
   }
 
   public List<Method> findallMethods() {
@@ -169,7 +166,6 @@ public class WadlBean implements Serializable {
   }
 
   public void onLoad() {
-    System.out.println("DEBUG WadlBean onLoad");
     try {
       String wadlFile = null;
       URL url = new URL(uri);
@@ -197,9 +193,9 @@ public class WadlBean implements Serializable {
        */
 //      System.out.println(findMethods());
     } catch (MalformedURLException ex) {
-      Logger.getLogger(WadlBean.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(WadlMethodBean.class.getName()).log(Level.SEVERE, null, ex);
     } catch (IOException | JAXBException ex) {
-      Logger.getLogger(WadlBean.class.getName()).log(Level.SEVERE, null, ex);
+      Logger.getLogger(WadlMethodBean.class.getName()).log(Level.SEVERE, null, ex);
     }
   }
 
@@ -246,12 +242,6 @@ public class WadlBean implements Serializable {
     return elementMediaTypes;
   }
 
-  public Map<String, String> getLabels() {
-    Map<String, String> labels = new HashMap<>();
-    labels.put("country", " The country of interest, encoded as a two-character ISO 3166-1 alpha-2 Country Code. ISO 3166-1 is part of the ISO 3166 standard published by the International Organization for Standardization (ISO), and defines codes for the names of countries, dependent territories, and special areas of geographical interest. The official name of the standard is Codes for the representation of names of countries and their subdivisions – Part 1: Country codes. ");
-    return labels;
-  }
-
   /**
    * Build a list of all parameters relevant to a method. This captures the
    * parent and immediate parameters.
@@ -276,28 +266,45 @@ public class WadlBean implements Serializable {
   }
 
   /**
-   * Get the label class type based upon the method name.
+   * Get the panel class type based upon the method name.
    *
    * @param methodName the method name
-   * @return the label class
+   * @return the panel class
    */
-  public String buildCSSType(String methodName) {
-    switch (methodName) {
-      case "GET":
-      case MediaType.APPLICATION_JSON:
-        return "info";
-      case "POST":
-      case MediaType.APPLICATION_XML:
-        return "success";
-      case "PUT":
-        return "warning";
-      case "HEAD":
-        return "warning";
-      case "DELETE":
-        return "danger";
+  public String buildPanelClass(String methodName) {
+    HTTPMethods method = HTTPMethods.valueOf(methodName);
+    switch (method) {
+      case GET:
+        return "panel-info";
+      case POST:
+        return "panel-success";
+      case PUT:
+        return "panel-warning";
+      case HEAD:
+        return "panel-warning";
+      case DELETE:
+        return "panel-danger";
       default:
-        return "default";
+        throw new AssertionError(method.name());
     }
+  }
+
+  /**
+   * Return a media type label class type.
+   *
+   * @param mediaType the media type
+   * @return a corresponding label css class
+   */
+  public String buildMediaTypeClass(String mediaType) {
+    switch (mediaType) {
+      case MediaType.APPLICATION_XML:
+        return "label-success";
+      case MediaType.APPLICATION_JSON:
+        return "label-info";
+      default:
+        return "label-default";
+    }
+
   }
 
   /**
@@ -309,19 +316,6 @@ public class WadlBean implements Serializable {
    */
   public String buildFormattedURI(String uriPattern) {
     return uriPattern.replaceAll("\\{(\\w+)\\}", "<span class=\"text-primary\">{$1}</span>");
-  }
-
-  /**
-   * Insert paragraph markers into the description text. This method replaces
-   * all large whitespace blocks with a paragraph closing and opening HTML tag.
-   * <p>
-   * This method should only be used inside a HTML paragraph!
-   *
-   * @param description the description text
-   * @return the description text with paragraph tags inserted
-   */
-  public String formatDescription(String description) {
-    return description.replaceAll("\\s{10,}", "</p>\n<p>");
   }
 
 }

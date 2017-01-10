@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+  <comment>GIS Rest Property Labels</comment>
+
+  <entry key="country">A two-character ISO 3166-1 alpha-2 Country Code. </entry>
+
+  <entry key="latitude">A geographic latitude in decimal degrees notation ranging between +90 and -90 degrees.</entry>
+  <entry key="longitude">A geographic longitude in decimal degrees notation ranging between +180 and -180 degrees. </entry>
+  <entry key="gisFeature">A encoded GIS query location, position or area.</entry>
+
+  <entry key="id">Either the state FIPS code or USPS 2-character abbreviation. </entry>
+  <entry key="geoid">A unique County identifier; defined as a concatenation of parent the state FIPS code (a two-character, zero padded integer) and the county FIPS code (a three-character, zero padded integer). </entry>
+  <entry key="state">A unique USPS 2-character state abbreviation. e.g. "NE" for Nebraska. Not case sensitive.</entry>
+  <entry key="geoid">A unique Census tract identifier; defined as a concatenation of the current state FIPS code, county FIPS code, and census tract code. </entry>
+  <entry key="county">The county name. e.g. "Lancaster" for Lancaster County. </entry>
+
+
+  <entry key="radius">A radius distance, in meters. </entry>
+  <entry key="startLatitude">The originating latitude in decimal degrees.</entry>
+  <entry key="startLongitude">The originating longitude in decimal degrees.</entry>
+  <entry key="stopLatitude">The terminating latitude in decimal degrees.</entry>
+  <entry key="stopLongitude">The terminating longitude in decimal degrees. </entry>
+
+  <entry key="query">A street address. </entry>
+  <entry key="epsgCode">The EPSG Geodetic index code.</entry>
+  <entry key="model">The desired elevation model. </entry>
+  <entry key="feature-name">The location feature name. </entry>
+  <entry key="ipaddress">Any valid IPv4 or IPv6 numerical address. </entry>
+
+
+  <entry key="GISFeature">A encoded GIS location, position or area.</entry>
+  <entry key="Response">A standard HTTP response.</entry>
+
+</properties>

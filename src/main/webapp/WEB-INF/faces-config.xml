@@ -20,4 +20,12 @@
     </contract-mapping>
   </resource-library-contracts>
 
+  <application>
+    <!--resource bundle for item labels used throughout the web site-->
+    <resource-bundle>
+      <base-name>faces.label</base-name>
+      <var>label</var>
+    </resource-bundle>
+  </application>
+    
 </faces-config>
